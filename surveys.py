@@ -34,6 +34,7 @@ satisfaction_survey = Survey(
         Question("Are you likely to shop here again?"),
     ])
 
+# Ignore everything below for now - important for "Further Study"
 personality_quiz = Survey(
     "Rithm Personality Test",
     "Learn more about yourself with our personality quiz!",
