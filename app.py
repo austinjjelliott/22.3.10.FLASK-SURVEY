@@ -21,7 +21,7 @@ def start_survey():
     session[response_key] = []
     return redirect("/questions/0")
 
-@app.route("/answer", method = ["POST"])
+@app.route("/answer", methods = ["POST"])
 def answered_questions():
     """Save the answer and move on to next question"""
     choice = request.form["answer"]
@@ -31,11 +31,11 @@ def answered_questions():
     session[response_key] = responses
 
     if (len(responses) == len(survey.questions)):
-        return render_template("completion.html")
+        return redirect("/complete")
     else:
         return redirect(f"/questions/{len(responses)}")
     
-@app.route("/quesitons/<int:question_idx>")
+@app.route("/questions/<int:question_idx>")
 def display_question(question_idx):
     responses = session.get(response_key)
 
@@ -44,14 +44,19 @@ def display_question(question_idx):
         return redirect ("/")
     if (len(responses) == len(survey.questions)):
         # answered all questions, send them to completion page 
-        return render_template ("/completion.html")
+        return redirect("/complete")
     if (len(responses) != question_idx):
         # trying to access questions out of order
         flash("Invalid question ID - Must access questions in order")
         return redirect (f"/questions/{len(responses)}")
     question = survey.questions[question_idx]
-    return render_template("quesiton.html", question_num = question_idx, question = question)
+    return render_template("question.html", question_num = question_idx, question = question)
 
+@app.route("/complete")
+def complete():
+    """Survey complete. Show completion page."""
+
+    return render_template("completion.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
